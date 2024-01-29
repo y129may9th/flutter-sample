@@ -1,0 +1,42 @@
+name: Analyze FormatCheck UnitTest Danger
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [ opened, synchronize ]
+  push:
+    branches: [ main ]
+
+jobs:
+  ci-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: check_out
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Get Flutter version from .tool-versions
+        id: get-version
+        run: echo "FLUTTER_VERSION=$(grep flutter .tool-versions | awk '{print $2}' | sed 's/-stable//')" >> $GITHUB_ENV
+      - name: echo veriosn
+        id: echo-version
+        run: echo ${{ env.FLUTTER_VERSION }}
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: 'stable'
+          cache: true
+
+      - name: Install asdf
+        uses: asdf-vm/actions/install@v1
+      - name: Run flutter pub get
+        run: flutter pub get
+      - name: Linter
+        run: flutter analyze
+      - name: Test
+        run: flutter test
+
