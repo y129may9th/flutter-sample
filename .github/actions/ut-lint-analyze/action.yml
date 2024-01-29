@@ -1,0 +1,13 @@
+name: 'Composite: get Flutter version'
+description: 'Get Flutter version'
+runs:
+  using: "composite"
+  steps:
+    - name: Get Flutter version from .tool-versions
+      id: get-version
+      run: echo "FLUTTER_VERSION=$(grep flutter .tool-versions | awk '{print $2}' | sed 's/-stable//')" >> $GITHUB_ENV
+      shell: bash
+    - name: echo veriosn
+      id: echo-version
+      run: echo ${{ env.FLUTTER_VERSION }}
+      shell: bash
