@@ -10,39 +10,19 @@ jobs:
   ci-check:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-
     steps:
       - name: check_out
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-
-      - name: variable test
-        run: |
-          echo ${{ env.TEST_SECRET }}
-          echo ${{ env.TEST_SECRET == 'hogehoge' }}
-          echo ${{ github.ref }}
-          echo "GITHUB_ENV_TEST=$TEST_SECRET" >> $GITHUB_ENV
-        env:
-          TEST_SECRET: ${{ secrets.TEST_SECRET }}
-      - name: $GITHUB_ENV test
-        run: |
-          echo "ths is env=$GITHUB_ENV_TEST"
-          echo ${{ env.GITHUB_ENV_TEST }}
-          echo ${{ env.GITHUB_ENV_TEST == 'hogehoge' }}
-
       - name: Get Flutter version
         uses: ./.github/actions/ut-lint-analyze
-        with:
-          test-secret: ${{ secrets.TEST_SECRET }}
-
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: 'stable'
           cache: true
-
       - name: Install asdf
         uses: asdf-vm/actions/install@v1
       - name: Run flutter pub get
@@ -51,4 +31,3 @@ jobs:
         run: flutter analyze
       - name: Test
         run: flutter test
-

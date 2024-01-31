@@ -1,9 +1,5 @@
 name: 'Composite: get Flutter version'
 description: 'Get Flutter version'
-inputs:
-  test-secret:
-    description: test secret
-    required: true
 runs:
   using: "composite"
   steps:
@@ -15,7 +11,5 @@ runs:
       id: echo-version
       run: |
         echo ${{ env.FLUTTER_VERSION }}
-        echo ${{ inputs.test-secret }}
-        echo ${{ inputs.test-secret == 'hogehoge' }}
       shell: bash
 
